@@ -9,7 +9,8 @@ Gem::Specification.new do |spec|
   spec.email = ["misha.marusyk@gmail.com"]
 
   spec.summary = "A flexible Ruby gem for building structured error objects."
-  spec.description = "error_craft provides a customizable way to format and structure error messages as arrays or hashes. It supports multiple formats, including string, array, and nested hash representations."
+  spec.description = "error_craft provides a customizable way to format and structure error messages as arrays or \
+hashes. It supports multiple formats, including string, array, and nested hash representations."
   spec.homepage = "https://github.com/mmarusyk/error_craft"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.1.0"
