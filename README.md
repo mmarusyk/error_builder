@@ -1,4 +1,4 @@
-# ErrorCraft
+# ErrorBuilder
 
 This is a Ruby gem that allows you to build structured error objects in a flexible and configurable way.
 
@@ -13,11 +13,11 @@ Before you begin, ensure you have met the following requirements:
 
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add error_craft
+    $ bundle add error_builder
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install error_craft
+    $ gem install error_builder
 
 ## Usage
 
@@ -26,10 +26,53 @@ If bundler is not being used to manage dependencies, install the gem by executin
 If you have to use in Rails:
 1. Add to `Gemfile`
 ```ruby
-  gem 'error_craft'
+  gem 'error_builder'
 ```
 
 2. Run `bundle i`
+
+3. You can configure the gem by using the ErrorBuilder.configure block:
+```ruby
+ErrorBuilder.configure do |config|
+  config.format         = :hash   # Supported formats: :hash, :array
+  config.message_format = :string # Supported formats: :string, :array
+end
+```
+
+### How To Use
+
+1. Create an Error Engine
+```ruby
+errors = ErrorBuilder::Engine.new
+```
+
+2. Add Errors
+```ruby
+errors.add(:base, "Something went wrong")
+```
+
+3. Convert Errors to Hash or Array (depends on configuration)
+```ruby
+errors.to_h    #=> { errors: { base: ["Something went wrong"] } }
+```
+
+### Including in Classes
+You can include ErrorBuilder in your classes to use the `errors` method:
+```ruby
+class MyService
+  include ErrorBuilder
+
+  def call 
+    errors.add(:base, "Something went wrong")
+
+    true
+  end
+end
+
+my_service = MyService.new
+my_service.call
+my_service.errors.to_h    #=> { errors: { base: ["Something went wrong"] } }
+```
 
 ## Development
 
@@ -40,7 +83,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/mmarusyk/error_craft. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/mmarusyk/error_craft/blob/main/CODE_OF_CONDUCT.md). You can find a list of contributors in the [CONTRIBUTORS.md](https://github.com/mmarusyk/error_craft/blob/main/CONTRIBUTORS.md) file.
+Bug reports and pull requests are welcome on GitHub at https://github.com/mmarusyk/error_builder. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/mmarusyk/error_builder/blob/main/CODE_OF_CONDUCT.md). You can find a list of contributors in the [CONTRIBUTORS.md](https://github.com/mmarusyk/error_builder/blob/main/CONTRIBUTORS.md) file.
 
 ## License
 
@@ -48,4 +91,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the error_craft project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/mmarusyk/error_craft/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the error_builder project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/mmarusyk/error_builder/blob/main/CODE_OF_CONDUCT.md).

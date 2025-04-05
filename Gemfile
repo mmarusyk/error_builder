@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in error_craft.gemspec
+# Specify your gem's dependencies in error_builder.gemspec
 gemspec
 
 gem "rake", "~> 13.0"
