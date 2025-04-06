@@ -53,7 +53,7 @@ errors.add(:base, "Something went wrong")
 
 3. Convert Errors to Hash or Array (depends on configuration)
 ```ruby
-errors.to_h    #=> { errors: { base: ["Something went wrong"] } }
+errors.to_h    #=> { base: ["Something went wrong"] }
 ```
 
 ### Including in Classes
@@ -71,7 +71,28 @@ end
 
 my_service = MyService.new
 my_service.call
-my_service.errors.to_h    #=> { errors: { base: ["Something went wrong"] } }
+my_service.errors.to_h    #=> { base: ["Something went wrong"] }
+```
+
+### Examples
+
+#### Using nested keys
+
+```ruby
+class MyService
+  include ErrorBuilder
+
+  def call 
+    errors.add("user.locations[0].name", "must be present")
+
+    true
+  end
+end
+
+my_service = MyService.new
+my_service.call
+my_service.errors.to_h             #=> { "user" => { "locations" => { 0 => { "name" => ["must be present"] } } } } }
+my_service.errors.to_h(flat: true) #=> { "user.locations[0].name" => ["must be present"] }
 ```
 
 ## Development

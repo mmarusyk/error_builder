@@ -16,12 +16,12 @@ module ErrorBuilder
       @errors << error
     end
 
-    def to_h
+    def to_h(flat: false)
       case format
       when :array
-        Formats::Array.new(@errors).to_h
+        Formats::Array.new(@errors, flat:).to_h
       when :hash
-        Formats::Hash.new(@errors).to_h
+        Formats::Hash.new(@errors, flat:).to_h
       else
         raise ArgumentError, "Unsupported format: #{format}"
       end

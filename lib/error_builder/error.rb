@@ -29,9 +29,9 @@ module ErrorBuilder
     end
 
     def keys
-      [key] if key.is_a?(Symbol)
+      return [key] unless key.to_s.include?(".")
 
-      key.to_s.delete(":").split(".")
+      deflat_key
     end
 
     private
@@ -45,6 +45,27 @@ module ErrorBuilder
       else
         raise ArgumentError, "Unsupported message format: #{format}"
       end
+    end
+
+    def deflat_key
+      key
+        .to_s
+        .split(".")
+        .flat_map { |part| part.split(/[\[\]]+/) }
+        .reject(&:empty?)
+        .map { |part| parse_part(part) }
+    end
+
+    def parse_part(part)
+      if integer?(part)
+        part.to_i
+      else
+        key.is_a?(String) ? part : part.to_sym
+      end
+    end
+
+    def integer?(part)
+      part.match?(/\A\d+\z/)
     end
   end
 end

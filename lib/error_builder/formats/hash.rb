@@ -4,24 +4,34 @@ module ErrorBuilder
   module Formats
     class Hash < Base
       def to_h
-        formatted = errors.each_with_object({}) do |error, hash|
-          set_nested_key(hash, error.keys, error.message)
-        end
+        errors.each_with_object({}) do |error, hash|
+          keys = flat ? [error.key] : error.keys
 
-        { errors: formatted }
+          add_nested_key(hash, keys, error.message)
+        end
       end
 
       private
 
-      def set_nested_key(hash, keys, value)
+      def add_nested_key(hash, keys, value)
         key = keys.shift
 
         if keys.empty?
-          hash[key.to_sym] = value
+          add_message(hash, key, value)
         else
-          hash[key.to_sym] ||= {}
+          hash[key] ||= {}
 
-          set_nested_key(hash[key.to_sym], keys, value)
+          add_nested_key(hash[key], keys, value)
+        end
+      end
+
+      def add_message(hash, key, value)
+        if value.is_a?(::Array)
+          hash[key] ||= []
+
+          hash[key] += value
+        else
+          hash[key] = value
         end
       end
     end

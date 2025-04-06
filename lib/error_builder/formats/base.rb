@@ -3,10 +3,11 @@
 module ErrorBuilder
   module Formats
     class Base
-      attr_reader :errors
+      attr_reader :errors, :flat
 
-      def initialize(errors)
+      def initialize(errors, flat:)
         @errors = errors
+        @flat   = flat
       end
 
       def to_h

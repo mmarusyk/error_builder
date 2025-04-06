@@ -1,13 +1,14 @@
 PATH
   remote: .
   specs:
-    error_builder (0.1.0)
+    error_builder (0.2.0)
       zeitwerk (~> 2.7.2)
 
 GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.3)
+    byebug (12.0.0)
     diff-lcs (1.6.1)
     json (2.10.2)
     language_server-protocol (3.17.0.4)
@@ -59,6 +60,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  byebug (~> 12.0)
   error_builder!
   rake (~> 13.0)
   rspec (~> 3.0)

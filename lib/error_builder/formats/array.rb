@@ -4,22 +4,36 @@ module ErrorBuilder
   module Formats
     class Array < Base
       def to_h
-        formatted = errors.map do |error|
-          build_nested_error(error.keys, error.message)
-        end
+        errors.each_with_object([]) do |error, array|
+          keys = flat ? [error.key] : error.keys
 
-        { errors: formatted }
+          build_nested_error(array, keys, error.message)
+        end
       end
 
       private
 
-      def build_nested_error(keys, value)
+      def build_nested_error(array, keys, value)
         key = keys.shift
 
         if keys.empty?
-          [{ key: key.to_sym, value: value }]
+          array << [key, value]
         else
-          [{ key: key.to_sym, value: build_nested_error(keys, value) }]
+          nested_array = find_or_create_nested_array(array, key)
+
+          build_nested_error(nested_array, keys, value)
+        end
+      end
+
+      def find_or_create_nested_array(array, key)
+        existing = array.find { |e| e.is_a?(::Array) && e.first == key }
+
+        if existing
+          existing[1]
+        else
+          new_array = [key, []]
+          array << new_array
+          new_array[1]
         end
       end
     end
