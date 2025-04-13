@@ -17,14 +17,11 @@ module ErrorBuilder
     end
 
     def to_h(flat: false)
-      case format
-      when :array
-        Formats::Array.new(@errors, flat:).to_h
-      when :hash
-        Formats::Hash.new(@errors, flat:).to_h
-      else
-        raise ArgumentError, "Unsupported format: #{format}"
-      end
+      formatter.new(errors, flat:).to_h
+    end
+
+    def formatter
+      FormatResolver.new(format).formatter
     end
   end
 end

@@ -1,6 +1,9 @@
 ## [Unreleased]
 
-## [0.3.0] - 2025-04.06
+## [0.4.0] - 2025-04-13
+- Added support of custom format classes.
+
+## [0.3.0] - 2025-04-06
 
 - Changed Array and Hash formats.
 - Added support for nested and flat error structures in both hash and array formats.

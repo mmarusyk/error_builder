@@ -5,7 +5,7 @@ module ErrorBuilder
     class Base
       attr_reader :errors, :flat
 
-      def initialize(errors, flat:)
+      def initialize(errors, flat: false)
         @errors = errors
         @flat   = flat
       end

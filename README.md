@@ -34,7 +34,7 @@ If you have to use in Rails:
 3. You can configure the gem by using the ErrorBuilder.configure block:
 ```ruby
 ErrorBuilder.configure do |config|
-  config.format         = :hash   # Supported formats: :hash, :array
+  config.format         = :hash   # Supported formats: :hash, :array, custom class format
   config.message_format = :string # Supported formats: :string, :array
 end
 ```
@@ -93,6 +93,24 @@ my_service = MyService.new
 my_service.call
 my_service.errors.to_h             #=> { "user" => { "locations" => { 0 => { "name" => ["must be present"] } } } } }
 my_service.errors.to_h(flat: true) #=> { "user.locations[0].name" => ["must be present"] }
+```
+
+#### Using custom formats
+
+```ruby
+class CustomFormat
+  def initialize(errors, **)
+    @errors = errors
+  end
+
+  def to_h
+    @errors.map { |error| "#{error.key} #{error.message.join(", ")}" }
+  end
+end
+
+errors = ErrorBuilder::Engine.new(format: CustomFormat)
+errors.add(:base, "Something went wrong")
+errors.to_h    #=> ["base Something went wrong"]
 ```
 
 ## Development

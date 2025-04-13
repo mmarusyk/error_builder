@@ -35,7 +35,7 @@ RSpec.describe ErrorBuilder::Engine do
       end
 
       it "adds error with message" do
-        expect(subject.errors.first.message).to eq([message])
+        expect(subject.errors.first.message).to contain_exactly(message)
       end
     end
 
@@ -101,7 +101,7 @@ RSpec.describe ErrorBuilder::Engine do
         end
 
         it "returns errors with message" do
-          expect(subject.to_h.map(&:last)).to all(eq(["Something went wrong"]))
+          expect(subject.to_h.map(&:last)).to all(contain_exactly("Something went wrong"))
         end
       end
 
@@ -121,7 +121,7 @@ RSpec.describe ErrorBuilder::Engine do
         end
 
         it "returns messages grouped by key" do
-          expect(subject.to_h[:base]).to eq(["Something went wrong", "Something went wrong"])
+          expect(subject.to_h[:base]).to contain_exactly("Something went wrong", "Something went wrong")
         end
       end
 
@@ -130,6 +130,24 @@ RSpec.describe ErrorBuilder::Engine do
 
         it "raises ArgumentError" do
           expect { subject.to_h }.to raise_error(ArgumentError, /Unsupported format: unsupported/)
+        end
+      end
+
+      context "when custom format" do
+        let(:format) do
+          Class.new do
+            def initialize(errors, **)
+              @errors = errors
+            end
+
+            def to_h
+              @errors.map { |error| "#{error.key} #{error.message.join(", ")}" }
+            end
+          end
+        end
+
+        it "returns errors" do
+          expect(subject.to_h).to contain_exactly("base Something went wrong", "base Something went wrong")
         end
       end
     end
